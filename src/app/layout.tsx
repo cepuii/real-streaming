@@ -1,17 +1,17 @@
-import { ClerkProvider } from '@clerk/nextjs';
-import type { Metadata } from 'next';
-import { Manrope } from 'next/font/google';
+import { ClerkProvider } from "@clerk/nextjs";
+import type { Metadata } from "next";
+import { Manrope } from "next/font/google";
 
-import { ThemeProvider } from '@/components/theme';
-import './globals.css';
+import { ThemeProvider } from "@/components/theme";
+import ReactQueryProvider from "@/react-query";
+import "./globals.css";
 
-const manrope = Manrope({ subsets: ['latin'] });
+const manrope = Manrope({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: 'Streaming',
-  description: 'Share ai powered videos',
+  title: "Streaming",
+  description: "Share ai powered videos",
 };
-
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -26,7 +26,7 @@ export default function RootLayout({
             defaultTheme="dark"
             disableTransitionOnChange
           >
-            {children}
+            <ReactQueryProvider>{children}</ReactQueryProvider>
           </ThemeProvider>
         </body>
       </html>
