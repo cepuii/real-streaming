@@ -1,5 +1,6 @@
 "use client";
 
+import { getNotifications } from "@/actions/user";
 import { getWorkSpaces } from "@/actions/workspace";
 import {
   Select,
@@ -11,13 +12,15 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
+import { MENU_ITEMS } from "@/constants";
 import { useQueryData } from "@/hooks/useQueryData";
-import { WorkspaceProps } from "@/types/index.type";
+import { NotificationsProps, WorkspaceProps } from "@/types/index.type";
 import { PlusCircle } from "lucide-react";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import Modal from "../modal";
 import Search from "../search";
+import SidebarItem from "./sidebar-items";
 
 type Props = {
   activeWorkspaceId: string;
@@ -25,18 +28,24 @@ type Props = {
 
 const Sidebar = ({ activeWorkspaceId }: Props) => {
   const router = useRouter();
+  const pathname = usePathname();
 
-  const { data, isFetched } = useQueryData(["user-workspaces"], getWorkSpaces);
-
-  const { data: workspace } = data as WorkspaceProps;
-
+  const { data: notifications } = useQueryData(
+    ["user-notifications"],
+    getNotifications
+  );
+  const { data: count } = notifications as NotificationsProps;
   const onChangeActiveWorkspace = (value: string) => {
     router.push(`/dashboard/${value}`);
   };
 
+  const { data, isFetched } = useQueryData(["user-workspaces"], getWorkSpaces);
+  const { data: workspace } = data as WorkspaceProps;
   const currentWorkspace = workspace.workspace.find(
     (ws) => ws.id === activeWorkspaceId
   );
+
+  const menuItems = MENU_ITEMS(activeWorkspaceId);
 
   return (
     <div className="bg-[#111111] flex-none relative p-4 h-full w-[250px] flex flex-col gap-4 items-center overflow-hidden">
@@ -95,8 +104,27 @@ const Sidebar = ({ activeWorkspaceId }: Props) => {
             <Search workspaceId={activeWorkspaceId} />
           </Modal>
         )}
+      <p className="w-full text-[#9d9d9d] font-bold mt-4">Menu</p>
+      <nav className="w-full">
+        <ul>
+          {menuItems.map((item) => (
+            <SidebarItem
+              key={item.title}
+              href={item.href}
+              title={item.title}
+              icon={item.icon}
+              selected={pathname === item.href}
+              notifications={
+                (item.title === "Notifications" &&
+                  count._count &&
+                  count._count.notification) ||
+                0
+              }
+            />
+          ))}
+        </ul>
+      </nav>
     </div>
   );
 };
-
 export default Sidebar;
