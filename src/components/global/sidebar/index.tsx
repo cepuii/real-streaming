@@ -2,6 +2,7 @@
 
 import { getNotifications } from "@/actions/user";
 import { getWorkSpaces } from "@/actions/workspace";
+import { Button } from "@/components/ui/button";
 import {
   Select,
   SelectContent,
@@ -12,21 +13,27 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { MENU_ITEMS } from "@/constants";
 import { useQueryData } from "@/hooks/useQueryData";
 import { NotificationsProps, WorkspaceProps } from "@/types/index.type";
-import { PlusCircle } from "lucide-react";
+import { Menu, PlusCircle } from "lucide-react";
 import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
+import GlobalCard from "../global-card";
+import InfoBar from "../info-bar";
+import Loader from "../loader";
 import Modal from "../modal";
 import Search from "../search";
 import SidebarItem from "./sidebar-items";
+import WorkspacePlaceholder from "./workspace-placeholder";
 
 type Props = {
   activeWorkspaceId: string;
 };
 
 const Sidebar = ({ activeWorkspaceId }: Props) => {
+  //WIP upgrade button
   const router = useRouter();
   const pathname = usePathname();
 
@@ -47,7 +54,7 @@ const Sidebar = ({ activeWorkspaceId }: Props) => {
 
   const menuItems = MENU_ITEMS(activeWorkspaceId);
 
-  return (
+  const SidebarSection = (
     <div className="bg-[#111111] flex-none relative p-4 h-full w-[250px] flex flex-col gap-4 items-center overflow-hidden">
       <div className="bg-[#111111] p-4 gap-2 flex justify-center items-center mb-4 absolute top-0 left-0 right-0">
         <Image src="/opal-logo.svg" height={40} width={40} alt="logo" />
@@ -124,6 +131,88 @@ const Sidebar = ({ activeWorkspaceId }: Props) => {
           ))}
         </ul>
       </nav>
+      <Separator className="w-4/5" />
+      <p className="w-full text-[#9d9d9d] font-bold mt-4">Workspaces</p>
+
+      {workspace.workspace.length === 1 && workspace.members.length === 0 && (
+        <div className="w-full mt-[-10px]">
+          <p className="text-[#3c3c3c] font-medium text-sm">
+            {workspace.subscription?.plan === "FREE"
+              ? "Upgrade to create workspaces"
+              : "No workspaces"}
+          </p>
+        </div>
+      )}
+
+      <nav className="w-full">
+        <ul className="h-[150px] overflow-auto overflow-x-hidden fade-layer">
+          {workspace.workspace.length > 0 &&
+            workspace.workspace.map(
+              (item) =>
+                item.type !== "PERSONAL" && (
+                  <SidebarItem
+                    key={item.id}
+                    href={`/dashboard/${item.id}`}
+                    title={item.name}
+                    selected={pathname === `/dashboard/${item.id}`}
+                    notifications={0}
+                    icon={
+                      <WorkspacePlaceholder>
+                        {item.name.charAt(0)}
+                      </WorkspacePlaceholder>
+                    }
+                  />
+                )
+            )}
+          {workspace.members.length > 0 &&
+            workspace.members.map((item) => (
+              <SidebarItem
+                key={item.Workspace.id}
+                href={`/dashboard/${item.Workspace.id}`}
+                title={item.Workspace.name}
+                selected={pathname === `/dashboard/${item.Workspace.id}`}
+                notifications={0}
+                icon={
+                  <WorkspacePlaceholder>
+                    {item.Workspace.name.charAt(0)}
+                  </WorkspacePlaceholder>
+                }
+              />
+            ))}
+        </ul>
+      </nav>
+      <Separator className="w-4/5" />
+      {workspace.subscription?.plan === "FREE" && (
+        <GlobalCard
+          title="Upgrade to Pro"
+          description="Unlock AI features like transcriptions, AI summary and more."
+          footer={
+            <Button className="text-sm w-full mt-2">
+              <Loader state={false}>Upgrade</Loader>
+            </Button>
+          }
+        ></GlobalCard>
+      )}
+    </div>
+  );
+
+  return (
+    <div className="w-full h-full">
+      <InfoBar />
+      {/*{Sheet mobile and desktop}*/}
+      <div className="md:hidden fixed my-4">
+        <Sheet>
+          <SheetTrigger asChild className="ml-2">
+            <Button variant={"ghost"} className="mt-[2px]">
+              <Menu />
+            </Button>
+          </SheetTrigger>
+          <SheetContent side={"left"} className="p-0 w-fit h-full">
+            {SidebarSection}
+          </SheetContent>
+        </Sheet>
+      </div>
+      <div className="md:block hidden h-full">{SidebarSection}</div>
     </div>
   );
 };
