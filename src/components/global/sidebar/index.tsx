@@ -188,7 +188,9 @@ const Sidebar = ({ activeWorkspaceId }: Props) => {
           description="Unlock AI features like transcriptions, AI summary and more."
           footer={
             <Button className="text-sm w-full mt-2">
-              <Loader state={false}>Upgrade</Loader>
+              <Loader color="#000" state={false}>
+                Upgrade
+              </Loader>
             </Button>
           }
         ></GlobalCard>
@@ -197,7 +199,7 @@ const Sidebar = ({ activeWorkspaceId }: Props) => {
   );
 
   return (
-    <div className="w-full h-full">
+    <div className="w-fit h-full">
       <InfoBar />
       {/*{Sheet mobile and desktop}*/}
       <div className="md:hidden fixed my-4">
@@ -212,7 +214,7 @@ const Sidebar = ({ activeWorkspaceId }: Props) => {
           </SheetContent>
         </Sheet>
       </div>
-      <div className="md:block hidden h-full">{SidebarSection}</div>
+      <div className="md:block   hidden h-full">{SidebarSection}</div>
     </div>
   );
 };

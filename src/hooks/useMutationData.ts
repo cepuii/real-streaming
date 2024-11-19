@@ -1,5 +1,5 @@
 import {
-  MutateFunction,
+  MutationFunction,
   MutationKey,
   useMutation,
   useQueryClient,
@@ -8,24 +8,31 @@ import { toast } from "sonner";
 
 export const useMutationData = (
   mutationKey: MutationKey,
-  mutationFn: MutateFunction<any, any>,
+  mutationFn: MutationFunction<any, any>,
   queryKey?: string,
   onSuccess?: () => void
 ) => {
   const client = useQueryClient();
-
   const { mutate, isPending } = useMutation({
     mutationKey,
     mutationFn,
     onSuccess(data) {
       if (onSuccess) onSuccess();
-      return toast(data?.status === 200 ? "Success" : "Error", {
-        description: data?.data,
-      });
+
+      return toast(
+        data?.status === 200 || data?.status === 201 ? "Success" : "Error",
+        {
+          description: data?.data,
+        }
+      );
     },
     onSettled: async () => {
-      return await client.invalidateQueries({ queryKey: [queryKey] });
+      return await client.invalidateQueries({
+        queryKey: [queryKey],
+        exact: true,
+      });
     },
   });
+
   return { mutate, isPending };
 };
