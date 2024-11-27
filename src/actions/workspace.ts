@@ -196,7 +196,7 @@ export const createWorkspace = async (name: string) => {
       });
 
       if (workspace) {
-        return { status: 201, data: "Workspace created" };
+        return { status: 200, data: "Workspace created" };
       }
     }
 
