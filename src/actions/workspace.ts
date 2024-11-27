@@ -106,9 +106,10 @@ export const getAllUserVideos = async (workSpaceId: string) => {
     if (videos && videos.length > 0) {
       return { status: 200, data: videos };
     }
+    return { status: 400, data: [] };
   } catch (error) {
     console.log("🔴 ERROR", error);
-    return { status: 403, data: [] };
+    return { status: 503, data: [] };
   }
 };
 
@@ -202,5 +203,98 @@ export const createWorkspace = async (name: string) => {
     return { status: 401, data: "You are not authorized to create workspace" };
   } catch (error) {
     return { status: 400 };
+  }
+};
+
+export const renameFolders = async (folderId: string, name: string) => {
+  try {
+    const folder = await client.folder.update({
+      where: {
+        id: folderId,
+      },
+      data: {
+        name,
+      },
+    });
+
+    if (folder) {
+      return { status: 200, data: "Folder Renamed" };
+    }
+    return { status: 400, data: "Folder does not exist" };
+  } catch (error) {
+    return { status: 500, data: "Oops! smth went wrong" };
+  }
+};
+
+export const createFolder = async (workspaceId: string) => {
+  try {
+    const isNewFolder = await client.workSpace.update({
+      where: {
+        id: workspaceId,
+      },
+      data: {
+        folders: {
+          create: {
+            name: "untitled",
+          },
+        },
+      },
+    });
+    if (isNewFolder) {
+      return { status: 200, data: "New Folder Created" };
+    }
+    return { status: 400, data: "Can't create the folder" };
+  } catch (error) {
+    return { status: 500, data: "Oops! smth went wrong" };
+  }
+};
+
+export const getFolderInfo = async (folderId: string) => {
+  try {
+    const folderInfo = await client.folder.findUnique({
+      where: {
+        id: folderId,
+      },
+      select: {
+        name: true,
+        _count: {
+          select: {
+            videos: true,
+          },
+        },
+      },
+    });
+
+    if (folderInfo) {
+      return { status: 200, data: folderInfo };
+    }
+    return { status: 400, data: "No folders" };
+  } catch (error) {
+    return { status: 500, data: "Oops!" };
+  }
+};
+
+export const moveVideoLocation = async (
+  videoId: string,
+  workSpaceId: string,
+  folderId: string
+) => {
+  try {
+    const location = await client.video.update({
+      where: {
+        id: videoId,
+      },
+      data: {
+        folderId: folderId || null,
+        workSpaceId,
+      },
+    });
+
+    if (location) {
+      return { status: 200, data: "Folder changed successfully" };
+    }
+    return { status: 404, data: "Folder/workspace not found" };
+  } catch (error) {
+    return { status: 500, data: "Oops!" };
   }
 };

@@ -5,7 +5,7 @@ import { UserButton } from "@clerk/nextjs";
 import { Search, UploadIcon } from "lucide-react";
 
 type Props = {};
-//TODO implement useSearch hook for this input
+//WIP: implement useSearch hook for this input
 const InfoBar = (props: Props) => {
   return (
     <header className="pl-20 md:pl-[256px] fixed p-4 w-full flex items-center justify-between gap-4">
