@@ -19,24 +19,7 @@ const Videos = ({ folderId, videosKey, workspaceId }: Props) => {
     getAllUserVideos(folderId)
   );
   const { status: videosStatus, data: videos } = videoData as VideosProps;
-  const mockData = [
-    {
-      User: {
-        firstname: "John",
-        lastname: "Doe",
-        image: "https://example.com/john-doe.jpg",
-      },
-      id: "12345",
-      processing: false,
-      Folder: {
-        id: "67890",
-        name: "Tutorials",
-      },
-      createdAt: new Date("2024-11-08T10:00:00Z"),
-      title: "Introduction to TypeScript",
-      source: "https://example.com/videos/introduction-to-typescript.mp4",
-    },
-  ];
+
   return (
     <div className="flex flex-col gap-4 mt-4">
       <div className="flex items-center justify-between">
@@ -52,12 +35,13 @@ const Videos = ({ folderId, videosKey, workspaceId }: Props) => {
             : "grid grid-cols-1 gap-10 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5"
         )}
       >
-        {/*{videosStatus === 200 ? (
-          videos.map((video) => <VideoCard />)
+        {videosStatus === 200 ? (
+          videos.map((video) => (
+            <VideoCard key={video.id} workspaceId={workspaceId} {...video} />
+          ))
         ) : (
           <p className="text-[#bdbdbd]">No videos in folder</p>
-        )}*/}
-        <VideoCard workspaceId={workspaceId} {...mockData[0]} />
+        )}
       </section>
     </div>
   );

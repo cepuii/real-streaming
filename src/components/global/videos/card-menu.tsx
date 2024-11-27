@@ -20,7 +20,13 @@ const CardMenu = ({
       className="flex items-center cursor-pointer gap-x-2"
       description="This action move video into definite place"
       title="Move to new Workspace/Folder"
-      trigger={<Move size={20} fill="#a4a4a4" className="text-[#a4a4a4]" />}
+      trigger={
+        <Move
+          size={20}
+          fill="#4f4f4f"
+          className="text-[#4f4f4f] hover:bg-[#a4a4a4] rounded-sm"
+        />
+      }
     >
       <ChangeVideoLocation
         videoId={videoId}

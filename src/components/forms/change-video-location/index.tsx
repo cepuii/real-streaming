@@ -18,7 +18,19 @@ const ChangeVideoLocation = ({
   currentWorkspace,
 }: Props) => {
   //WIP: wire up the use move folder
-  const {} = useMoveVideos();
+  const {
+    errors,
+    folders,
+    isFetching,
+    isFolders,
+    isPending,
+    onFormSubmit,
+    register,
+    workspaces,
+  } = useMoveVideos(videoId, currentWorkspace!);
+
+  const folder = folders.find((f) => f.id === currentFolder);
+  const workspace = workspaces.find((w) => w.id === currentWorkspace);
 
   return (
     <form className="flex flex-col gap-y-5">

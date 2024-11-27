@@ -1,7 +1,7 @@
-import { moveVideoLocation } from "@/actions/workspace";
+import { getWorkspaceFolders, moveVideoLocation } from "@/actions/workspace";
 import { moveVideoSchema } from "@/components/forms/change-video-location/schema";
 import { useAppSelector } from "@/redux/store";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useMutationData } from "./useMutationData";
 import useZodForm from "./useZodForm";
 
@@ -36,6 +36,34 @@ export const useMoveVideos = (videoId: string, currentWorkspace: string) => {
     { folder_id: null, workspace_id: currentWorkspace }
   );
 
-  //TODO 7:01:40
   //fetch  folders with useEffect
+  const fetchFolders = async (workspace: string) => {
+    setIsFetching(true);
+    const folders = await getWorkspaceFolders(workspace);
+    setIsFetching(false);
+    setIsFolders(folders.data);
+  };
+
+  useEffect(() => {
+    fetchFolders(currentWorkspace);
+  }, []);
+
+  useEffect(() => {
+    const workspace = watch(async (value) => {
+      if (value.workspace_id) fetchFolders(value.workspace_id);
+    });
+
+    return () => workspace.unsubscribe();
+  }, [watch]);
+
+  return {
+    onFormSubmit,
+    errors,
+    register,
+    isPending,
+    folders,
+    workspaces,
+    isFetching,
+    isFolders,
+  };
 };
