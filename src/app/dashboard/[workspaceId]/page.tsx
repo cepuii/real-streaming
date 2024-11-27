@@ -1,12 +1,13 @@
 import CreateFolders from "@/components/global/create-folders";
 import CreateWorkspace from "@/components/global/create-workspace";
 import Folders from "@/components/global/folders";
+import Videos from "@/components/global/videos";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 type Props = {
   params: { workspaceId: string };
 };
-
+//TODO 7:30:02 / 16:53:09
 const Page = ({ params }: Props) => {
   return (
     <div>
@@ -34,6 +35,11 @@ const Page = ({ params }: Props) => {
         <section>
           <TabsContent value="videos">
             <Folders workspaceId={params.workspaceId} />
+            <Videos
+              folderId={params.workspaceId}
+              workspaceId={params.workspaceId}
+              videosKey="user-videos"
+            />
           </TabsContent>
         </section>
       </Tabs>
