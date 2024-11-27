@@ -5,7 +5,9 @@ import FolderDuotone from "@/components/icons/folder-duotone";
 import { useMutationDataState } from "@/hooks/useMutationData";
 import { useQueryData } from "@/hooks/useQueryData";
 import { cn } from "@/lib/utils";
+import { FOLDERS } from "@/redux/slices/folders";
 import { ArrowRight } from "lucide-react";
+import { useDispatch } from "react-redux";
 import Folder from "./folder";
 
 type Props = { workspaceId: string };
@@ -25,6 +27,7 @@ export type FoldersProps = {
 };
 
 const Folders = ({ workspaceId }: Props) => {
+  const dispatch = useDispatch();
   const { data, isFetched } = useQueryData(["workspace-folders"], () =>
     getWorkspaceFolders(workspaceId)
   );
@@ -33,9 +36,10 @@ const Folders = ({ workspaceId }: Props) => {
 
   const { data: folders, status } = data as FoldersProps;
 
-  //if (isFetched && folders) {
-  //WIP: add redux stuff for folders
-  //}
+  if (isFetched && folders) {
+    dispatch(FOLDERS({ folders: folders }));
+  }
+
   return (
     <div className="flex flex-col gap-4">
       <div className="flex items-center justify-between">

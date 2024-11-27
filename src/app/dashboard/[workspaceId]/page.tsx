@@ -7,7 +7,6 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 type Props = {
   params: { workspaceId: string };
 };
-//TODO 7:30:02 / 16:53:09
 const Page = ({ params }: Props) => {
   return (
     <div>

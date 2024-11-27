@@ -16,10 +16,12 @@ import { Separator } from "@/components/ui/separator";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { MENU_ITEMS } from "@/constants";
 import { useQueryData } from "@/hooks/useQueryData";
+import { WORKSPACES } from "@/redux/slices/workspaces";
 import { NotificationsProps, WorkspaceProps } from "@/types/index.type";
 import { Menu, PlusCircle } from "lucide-react";
 import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
+import { useDispatch } from "react-redux";
 import GlobalCard from "../global-card";
 import InfoBar from "../info-bar";
 import Loader from "../loader";
@@ -36,6 +38,7 @@ const Sidebar = ({ activeWorkspaceId }: Props) => {
   //WIP upgrade button
   const router = useRouter();
   const pathname = usePathname();
+  const dispatch = useDispatch();
 
   const { data: notifications } = useQueryData(
     ["user-notifications"],
@@ -53,6 +56,10 @@ const Sidebar = ({ activeWorkspaceId }: Props) => {
   );
 
   const menuItems = MENU_ITEMS(activeWorkspaceId);
+
+  if (isFetched && workspace) {
+    dispatch(WORKSPACES({ workspaces: workspace.workspace }));
+  }
 
   const SidebarSection = (
     <div className="bg-[#111111] flex-none relative p-4 h-full w-[250px] flex flex-col gap-4 items-center overflow-hidden">
