@@ -80,3 +80,14 @@ export type VideoProps = {
     summery: string;
   };
 };
+
+export type NotificationProps = {
+  status: number;
+  data: {
+    notification: {
+      id: string;
+      userId: string | null;
+      content: string;
+    }[];
+  };
+};

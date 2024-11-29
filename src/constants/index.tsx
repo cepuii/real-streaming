@@ -17,7 +17,7 @@ export const MENU_ITEMS = (
   },
   {
     title: "Notifications",
-    href: `/dashboard/${workspaceId}/home`,
+    href: `/dashboard/${workspaceId}/notifications`,
     icon: <Bell />,
   },
   {
