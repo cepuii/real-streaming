@@ -9,7 +9,6 @@ import { Toaster } from "sonner";
 import "./globals.css";
 
 const manrope = Manrope({ subsets: ["latin"] });
-
 export const metadata: Metadata = {
   title: "Streaming",
   description: "Share ai powered videos",

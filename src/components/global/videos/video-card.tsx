@@ -24,8 +24,6 @@ type Props = {
 };
 
 const VideoCard = (props: Props) => {
-  //WIP: wire up date
-
   const daysAgo = Math.floor(
     (new Date().getTime() - props.createdAt.getTime()) / (24 * 60 * 60 * 1000)
   );
