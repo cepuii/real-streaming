@@ -8,7 +8,7 @@ import { User } from "lucide-react";
 
 type Props = {};
 
-const Notifications = (props: Props) => {
+const NotificationsPage = (props: Props) => {
   //WIP: avatar, date
   const { data } = useQueryData(["user-notifications"], getNotifications);
 
@@ -41,4 +41,4 @@ const Notifications = (props: Props) => {
   );
 };
 
-export default Notifications;
+export default NotificationsPage;
