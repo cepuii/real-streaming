@@ -1,12 +1,12 @@
 "use client";
 
 import { getPreviewVideo } from "@/actions/workspace";
-import { TabsContent } from "@/components/ui/tabs";
 import { useQueryData } from "@/hooks/useQueryData";
 import { truncateString } from "@/lib/utils";
 import { VideoProps } from "@/types/index.type";
 import { Download } from "lucide-react";
 import { useRouter } from "next/navigation";
+import Activities from "../../activities";
 import AiTools from "../../ai-tools";
 import TabMenu from "../../tabs";
 import VideoTranscript from "../../video-transcript";
@@ -112,13 +112,10 @@ const VideoPreview = ({ videoId }: Props) => {
               plan={video.User?.subscription?.plan!}
             />
             <VideoTranscript transcript={video.description!} />
-            <TabsContent value="Activity">
-              Make changes to your account here
-            </TabsContent>
-            {/*<Activities
-						author={video.User?.firstname as string}
-						videoId={videoId}
-					/>*/}
+            <Activities
+              author={video.User?.firstname as string}
+              videoId={videoId}
+            />
           </TabMenu>
         </div>
       </div>

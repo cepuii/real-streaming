@@ -217,6 +217,105 @@ export const enableFirstView = async (state: boolean) => {
       return { status: 400, data: "Setting updated" };
     }
   } catch (error) {
+    return { status: 500 };
+  }
+};
+
+export const createCommentAndReply = async (
+  userId: string,
+  comment: string,
+  videoId: string,
+  commentId?: string | undefined
+) => {
+  try {
+    const reply = await client.comment.update({
+      where: {
+        id: commentId,
+      },
+      data: {
+        reply: {
+          create: {
+            comment,
+            userId,
+            videoId,
+          },
+        },
+      },
+    });
+
+    if (reply) {
+      return { status: 200, data: "Reply posted" };
+    }
+
+    const newComment = await client.video.update({
+      where: {
+        id: videoId,
+      },
+      data: {
+        Comment: {
+          create: {
+            comment,
+            userId,
+          },
+        },
+      },
+    });
+
+    if (newComment) {
+      return { status: 200, data: "New comment added" };
+    }
+  } catch (error) {
+    return { status: 500 };
+  }
+};
+
+export const getUserProfile = async () => {
+  try {
+    const user = await currentUser();
+    if (!user) {
+      return { status: 403 };
+    }
+
+    const profileIdAndImage = await client.user.findUnique({
+      where: {
+        clerkid: user.id,
+      },
+      select: {
+        image: true,
+        id: true,
+      },
+    });
+
+    if (profileIdAndImage) {
+      return { status: 200, data: profileIdAndImage };
+    }
+  } catch (error) {
+    return { status: 500 };
+  }
+};
+
+export const getVideoComments = async (id: string) => {
+  try {
+    const comments = await client.comment.findMany({
+      where: {
+        OR: [{ videoId: id }, { commentId: id }],
+        commentId: null,
+      },
+      include: {
+        reply: {
+          include: {
+            User: true,
+          },
+        },
+        User: true,
+      },
+    });
+
+    if (comments && comments.length > 0) {
+      return { status: 200, data: comments };
+    }
     return { status: 400 };
+  } catch (error) {
+    return { status: 500, data: null };
   }
 };
