@@ -228,23 +228,25 @@ export const createCommentAndReply = async (
   commentId?: string | undefined
 ) => {
   try {
-    const reply = await client.comment.update({
-      where: {
-        id: commentId,
-      },
-      data: {
-        reply: {
-          create: {
-            comment,
-            userId,
-            videoId,
+    if (commentId) {
+      const reply = await client.comment.update({
+        where: {
+          id: commentId,
+        },
+        data: {
+          reply: {
+            create: {
+              comment,
+              userId,
+              videoId,
+            },
           },
         },
-      },
-    });
+      });
 
-    if (reply) {
-      return { status: 200, data: "Reply posted" };
+      if (reply) {
+        return { status: 200, data: "Reply posted" };
+      }
     }
 
     const newComment = await client.video.update({
@@ -311,10 +313,7 @@ export const getVideoComments = async (id: string) => {
       },
     });
 
-    if (comments && comments.length > 0) {
-      return { status: 200, data: comments };
-    }
-    return { status: 400 };
+    return { status: 200, data: comments };
   } catch (error) {
     return { status: 500, data: null };
   }
