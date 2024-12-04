@@ -30,7 +30,7 @@ const VideoCard = (props: Props) => {
 
   return (
     <Loader
-      state={props.processing}
+      state={false}
       className="bg-[#171717] flex justify-center items-center border-[1px] border-[#252525] rounded-xl "
     >
       <div className="group overflow-hidden cursor-pointer bg-[#171717] relative border-[1px] border-[#252525] flex flex-col rounded-xl">
@@ -64,7 +64,7 @@ const VideoCard = (props: Props) => {
               {props.title}
             </h2>
             <div className="flex gap-x-2 items-center mt-4">
-              <Avatar className="w-8 h-8">
+              <Avatar>
                 <AvatarImage src={props.User?.image as string} />
                 <AvatarFallback>
                   <User />
