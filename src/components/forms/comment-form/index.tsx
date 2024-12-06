@@ -5,29 +5,43 @@ import Loader from "@/components/global/loader";
 import { Button } from "@/components/ui/button";
 import { useVideoComment } from "@/hooks/useVideo";
 import { Send } from "lucide-react";
+import { FormEvent } from "react";
 
 type Props = {
   videoId: string;
   commentId?: string;
   author: string;
   close?: () => void;
+  lines?: number;
 };
 
-const CommentForm = ({ author, videoId, close, commentId }: Props) => {
+const CommentForm = ({
+  author,
+  videoId,
+  close,
+  commentId,
+  lines = 5,
+}: Props) => {
   const { errors, isPending, onFormSubmit, register } = useVideoComment(
     videoId,
     commentId
   );
 
+  const formSubmit = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    onFormSubmit();
+    close?.();
+  };
+
   return (
-    <form className="relative w-full" onSubmit={onFormSubmit}>
+    <form className="relative w-full" onSubmit={formSubmit}>
       <FormGenerator
         register={register}
         errors={errors}
         placeholder={`Respond to ${author}...`}
         name="comment"
         inputType="textarea"
-        lines={5}
+        lines={lines}
         type="text"
       />
       <Button

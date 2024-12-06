@@ -30,7 +30,8 @@ const VideoCard = (props: Props) => {
 
   return (
     <Loader
-      state={props.processing}
+      //state={props.processing}
+      state={false}
       className="bg-[#171717] flex justify-center items-center border-[1px] border-[#252525] rounded-xl "
     >
       <div className="group overflow-hidden cursor-pointer bg-[#171717] relative border-[1px] border-[#252525] flex flex-col rounded-xl">
@@ -56,7 +57,8 @@ const VideoCard = (props: Props) => {
             className="w-full aspect-video opacity-50 z-20"
           >
             <source
-              src={`${process.env.NEXT_PUBLIC_CLOUD_FRONT_STREAM_URL}/${props.source}#t=1`}
+              //src={`${process.env.NEXT_PUBLIC_CLOUD_FRONT_STREAM_URL}/${props.source}#t=1`}
+              src={props.source}
             />
           </video>
           <div className="px-5 py-3 flex flex-col gap-y-2 z-20">
