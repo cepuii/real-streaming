@@ -1,7 +1,9 @@
+import { inviteMembers } from "@/actions/user";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useMutationData } from "@/hooks/useMutationData";
 import { useSearch } from "@/hooks/useSearch";
 import { User } from "lucide-react";
 import Loader from "../loader";
@@ -18,9 +20,11 @@ const Search = ({ workspaceId }: Props) => {
   //WIP: Wire up sending invitations
   //WIP: invite button in UI
 
-  //const {isPending, mutate} = useMutationData(["invite-member"], (data:{receiverId:string;email: string})=>{
-
-  //});
+  const { isPending, mutate } = useMutationData(
+    ["invite-member"],
+    (data: { receiverId: string; email: string }) =>
+      inviteMembers(workspaceId, data.receiverId, data.email)
+  );
 
   return (
     <div className="flex flex-col gap-y-5">
@@ -62,9 +66,11 @@ const Search = ({ workspaceId }: Props) => {
                 <Button
                   className="w-5/12 font-bold"
                   variant={"default"}
-                  onClick={() => {}}
+                  onClick={() =>
+                    mutate({ receiverId: user.id, email: user.email })
+                  }
                 >
-                  <Loader state={false} color="#000">
+                  <Loader state={isPending} color="#000">
                     Invite
                   </Loader>
                 </Button>
