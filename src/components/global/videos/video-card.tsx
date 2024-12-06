@@ -66,7 +66,7 @@ const VideoCard = (props: Props) => {
               {props.title}
             </h2>
             <div className="flex gap-x-2 items-center mt-4">
-              <Avatar className="w-8 h-8">
+              <Avatar>
                 <AvatarImage src={props.User?.image as string} />
                 <AvatarFallback>
                   <User />
