@@ -1,11 +1,12 @@
 "use client";
 
-import { getPreviewVideo } from "@/actions/workspace";
+import { getPreviewVideo, sendEmailForFirstView } from "@/actions/workspace";
 import { useQueryData } from "@/hooks/useQueryData";
 import { truncateString } from "@/lib/utils";
 import { VideoProps } from "@/types/index.type";
 import { Download } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 import Activities from "../../activities";
 import AiTools from "../../ai-tools";
 import TabMenu from "../../tabs";
@@ -17,7 +18,6 @@ type Props = {
 };
 
 const VideoPreview = ({ videoId }: Props) => {
-  //WIP: setup notify first view
   //WIP: implement download button
   //WIP: setup activity
   const router = useRouter();
@@ -25,8 +25,19 @@ const VideoPreview = ({ videoId }: Props) => {
   const { data } = useQueryData(["preview-video"], () =>
     getPreviewVideo(videoId)
   );
-
   const { data: video, status, author } = data as VideoProps;
+
+  const notifyFirstView = async () => await sendEmailForFirstView(videoId);
+
+  useEffect(() => {
+    if (video.views === 0) {
+      notifyFirstView();
+    }
+
+    return () => {
+      notifyFirstView();
+    };
+  }, []);
 
   if (status !== 200) router.push("/");
   //WIP: move to util
@@ -65,7 +76,8 @@ const VideoPreview = ({ videoId }: Props) => {
           controls
         >
           <source
-            src={`${process.env.NEXT_PUBLIC_CLOUD_FRONT_STREAM_URL}/${video.source}#1`}
+            //src={`${process.env.NEXT_PUBLIC_CLOUD_FRONT_STREAM_URL}/${video.source}#1`}
+            src={video.source}
           />
         </video>
         <div className="flex flex-col text-2xl gap-y-4">

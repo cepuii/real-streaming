@@ -2,6 +2,7 @@
 
 import { client } from "@/lib/prisma";
 import { currentUser } from "@clerk/nextjs/server";
+import { sendEmail } from "./user";
 
 export const verifyAccessToWorkspace = async (workspaceId: string) => {
   try {
@@ -346,5 +347,80 @@ export const getPreviewVideo = async (videoId: string) => {
     return { status: 400, data: "No video!" };
   } catch (error) {
     return { status: 500, data: "Oops!" };
+  }
+};
+
+export const sendEmailForFirstView = async (videoId: string) => {
+  try {
+    const user = await currentUser();
+    if (!user) {
+      return { status: 404 };
+    }
+
+    const firstViewSettings = await client.user.findUnique({
+      where: {
+        clerkid: user.id,
+      },
+      select: {
+        firstView: true,
+      },
+    });
+
+    if (!firstViewSettings?.firstView) return;
+
+    const video = await client.video.findUnique({
+      where: {
+        id: videoId,
+      },
+      select: {
+        title: true,
+        views: true,
+        User: {
+          select: {
+            email: true,
+          },
+        },
+      },
+    });
+    if (video && video.views === 0) {
+      await client.video.update({
+        where: {
+          id: videoId,
+        },
+        data: {
+          views: video.views + 1,
+        },
+      });
+    }
+
+    const { transporter, mailOptions } = await sendEmail(
+      video?.User?.email!,
+      "You got a viewer",
+      `Your video ${video?.title} just got its first view`
+    );
+
+    transporter.sendMail(mailOptions, async (error, info) => {
+      if (error) {
+        console.log(error);
+      } else {
+        const notification = await client.user.update({
+          where: {
+            clerkid: user.id,
+          },
+          data: {
+            notification: {
+              create: {
+                content: mailOptions.text,
+              },
+            },
+          },
+        });
+        if (notification) {
+          return { status: 200 };
+        }
+      }
+    });
+  } catch (error) {
+    console.log(error);
   }
 };
