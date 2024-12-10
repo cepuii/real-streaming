@@ -24,8 +24,8 @@ import { usePathname, useRouter } from "next/navigation";
 import { useDispatch } from "react-redux";
 import GlobalCard from "../global-card";
 import InfoBar from "../info-bar";
-import Loader from "../loader";
 import Modal from "../modal";
+import PaymentButton from "../payment-button";
 import Search from "../search";
 import SidebarItem from "./sidebar-items";
 import WorkspacePlaceholder from "./workspace-placeholder";
@@ -193,13 +193,7 @@ const Sidebar = ({ activeWorkspaceId }: Props) => {
         <GlobalCard
           title="Upgrade to Pro"
           description="Unlock AI features like transcriptions, AI summary and more."
-          footer={
-            <Button className="text-sm w-full mt-2">
-              <Loader color="#000" state={false}>
-                Upgrade
-              </Loader>
-            </Button>
-          }
+          footer={<PaymentButton />}
         ></GlobalCard>
       )}
     </div>
