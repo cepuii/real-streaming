@@ -2,7 +2,6 @@ import { acceptInvite } from "@/actions/user";
 import { redirect } from "next/navigation";
 
 type Props = { params: { inviteId: string } };
-//TODO 10:01:01 / 16:53:09
 const InvitePage = async ({ params: { inviteId } }: Props) => {
   const invite = await acceptInvite(inviteId);
 
