@@ -9,7 +9,7 @@ export const POST = async (
     const body = await req.json();
     const personalWorkspaceId = await client.user.findUnique({
       where: {
-        clerkid: id,
+        id,
       },
       select: {
         workspace: {
@@ -28,7 +28,7 @@ export const POST = async (
 
     const startProcessingVideo = await client.workSpace.update({
       where: {
-        id: personalWorkspaceId?.workspace[0].id,
+        id: personalWorkspaceId?.workspace?.[0].id,
       },
       data: {
         videos: {
