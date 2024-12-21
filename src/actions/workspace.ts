@@ -424,3 +424,29 @@ export const sendEmailForFirstView = async (videoId: string) => {
     console.log(error);
   }
 };
+
+export const editVideoInfo = async (
+  videoId: string,
+  title: string,
+  description: string
+) => {
+  try {
+    const video = await client.video.update({
+      where: {
+        id: videoId,
+      },
+      data: {
+        title,
+        description,
+      },
+    });
+
+    if (video) {
+      return { status: 200, data: "video updated!" };
+    }
+
+    return { status: 400, data: "No video!" };
+  } catch (error) {
+    return { status: 500, data: error };
+  }
+};

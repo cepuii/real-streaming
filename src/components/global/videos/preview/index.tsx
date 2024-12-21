@@ -12,6 +12,7 @@ import AiTools from "../../ai-tools";
 import TabMenu from "../../tabs";
 import VideoTranscript from "../../video-transcript";
 import CopyLink from "../copy-link";
+import EditVideo from "../edit-video";
 import RichLink from "../rich-link";
 type Props = {
   videoId: string;
@@ -83,7 +84,7 @@ const VideoPreview = ({ videoId }: Props) => {
         <div className="flex flex-col text-2xl gap-y-4">
           <div className="flex gap-x-5 items-center justify-between">
             <p className="text-[#BDBDBD] text-semibold">Description</p>
-            {/*{author ? (
+            {author ? (
               <EditVideo
                 videoId={videoId}
                 title={video.title as string}
@@ -91,7 +92,7 @@ const VideoPreview = ({ videoId }: Props) => {
               />
             ) : (
               <></>
-            )}*/}
+            )}
           </div>
           <p className="text-[#9D9D9D] text-lg text-medium">
             {video.description}
@@ -123,7 +124,7 @@ const VideoPreview = ({ videoId }: Props) => {
               trial={video.User?.trial!}
               plan={video.User?.subscription?.plan!}
             />
-            <VideoTranscript transcript={video.description!} />
+            <VideoTranscript transcript={video.summery!} />
             <Activities
               author={video.User?.firstname as string}
               videoId={videoId}
