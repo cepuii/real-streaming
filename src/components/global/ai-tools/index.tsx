@@ -8,7 +8,6 @@ type Props = {
   trial: boolean;
   videoId: string;
 };
-
 const AiTools = ({ plan, trial, videoId }: Props) => {
   //WIP: set up AI hook
   return (
