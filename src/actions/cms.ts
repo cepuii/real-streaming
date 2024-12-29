@@ -17,10 +17,10 @@ export const getWixContent = async () => {
       })
       .find();
 
-    const videosIds = videos.items.map((video) => video.data?.id);
+    const videosIds = videos.items.map((video) => video.data?.title);
     const video = await client.video.findMany({
       where: {
-        id: {
+        title: {
           in: videosIds,
         },
       },
