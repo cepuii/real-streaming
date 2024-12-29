@@ -1,3 +1,4 @@
+"use client";
 import ChangeVideoLocation from "@/components/forms/change-video-location";
 import { Move } from "lucide-react";
 import Modal from "../modal";
